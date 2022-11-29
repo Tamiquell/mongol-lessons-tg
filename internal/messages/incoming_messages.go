@@ -40,7 +40,7 @@ func (s *Model) IncomingMessage(ctx context.Context, msg Message) error {
 		return s.tgClient.SendMessage(startMessage, msg.UserID, hp.StartKeyboard)
 	case "/help":
 		currentlyIn = "/start"
-		return s.tgClient.SendMessage("HEEEELP", msg.UserID, hp.StartKeyboard)
+		return s.tgClient.SendMessage(helpMessage, msg.UserID, hp.StartKeyboard)
 	case "/verbs":
 		currentlyIn = "/verbs"
 		return s.tgClient.SendMessage("You can learn new verbs here", msg.UserID, hp.VerbsInitKeyboard)
@@ -51,7 +51,6 @@ func (s *Model) IncomingMessage(ctx context.Context, msg Message) error {
 		currentlyIn = "/study"
 		row := strings.Split(msg.Text, " - ")
 		first, second := row[0], row[1]
-		fmt.Println(first, second)
 		verbsList, err := vb.VerbsList(first, second)
 		if err != nil {
 			return err
