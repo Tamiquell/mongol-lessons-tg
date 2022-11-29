@@ -62,8 +62,10 @@ func (s *Model) IncomingMessage(ctx context.Context, msg Message) error {
 			fmt.Println("AAAAAAAAAAA")
 			return s.tgClient.SendMessage("You are back in main menu", msg.UserID, hp.StartKeyboard)
 		} else if currentlyIn == "/test" {
+			currentlyIn = "/verbs"
 			return s.tgClient.SendMessage("You are back in verbs menu", msg.UserID, hp.VerbsInitKeyboard)
 		} else if currentlyIn == "/study" {
+			currentlyIn = "/verbs"
 			return s.tgClient.SendMessage("You are back in verbs menu", msg.UserID, hp.VerbsInitKeyboard)
 		}
 
