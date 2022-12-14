@@ -2,7 +2,6 @@ package messages
 
 import (
 	"context"
-	"fmt"
 	hp "github/Tamiquell/mongol-lessons-tg/internal/helpers"
 	vb "github/Tamiquell/mongol-lessons-tg/internal/verbs"
 	"strings"
@@ -30,7 +29,7 @@ type Message struct {
 }
 
 var previousCommand string
-var answers string
+var answers = make(map[int64]string)
 var currentlyIn string
 
 func (s *Model) IncomingMessage(ctx context.Context, msg Message) error {
@@ -58,7 +57,6 @@ func (s *Model) IncomingMessage(ctx context.Context, msg Message) error {
 		return s.tgClient.SendMessage(verbsList, msg.UserID, hp.StudyKeyboard)
 	case "/back":
 		if currentlyIn == "/verbs" {
-			fmt.Println("AAAAAAAAAAA")
 			return s.tgClient.SendMessage("You are back in main menu", msg.UserID, hp.StartKeyboard)
 		} else if currentlyIn == "/test" {
 			currentlyIn = "/verbs"
@@ -74,14 +72,14 @@ func (s *Model) IncomingMessage(ctx context.Context, msg Message) error {
 	case "/reroll":
 		currentlyIn = "/test"
 		text, answ, err := vb.RandomVerbs()
-		answers = answ
+		answers[msg.UserID] = answ
 		if err != nil {
 			return err
 		}
 		return s.tgClient.SendMessage(text, msg.UserID, hp.VerbsTestKeyboard)
 	case "/answers":
 		currentlyIn = "/test"
-		return s.tgClient.SendMessage(answers, msg.UserID, hp.VerbsTestKeyboard)
+		return s.tgClient.SendMessage(answers[msg.UserID], msg.UserID, hp.VerbsTestKeyboard)
 	}
 
 	return nil
