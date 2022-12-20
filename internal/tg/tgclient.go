@@ -1,10 +1,12 @@
 package tg
 
 import (
+	"bufio"
 	"context"
 	"github/Tamiquell/mongol-lessons-tg/internal/messages"
 	vb "github/Tamiquell/mongol-lessons-tg/internal/verbs"
 	"log"
+	"os"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/pkg/errors"
@@ -41,21 +43,38 @@ func (c *Client) ListenUpdates(ctx context.Context, msgModel *messages.Model) {
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
 
+	ctx, cancel := context.WithCancel(ctx)
+
 	updates := c.client.GetUpdatesChan(u)
 
 	log.Println("listening for messages")
+	go receiveUpdates(ctx, updates, msgModel)
+	bufio.NewReader(os.Stdin).ReadBytes('\n')
+	cancel()
 
-	for update := range updates {
-		if update.Message != nil { // If we got a message
-			log.Printf("[%s] %s", update.Message.From.UserName, update.Message.Text)
+}
 
-			err := msgModel.IncomingMessage(ctx, messages.Message{
-				Text:   update.Message.Text,
-				UserID: update.Message.From.ID,
-			})
-			if err != nil {
-				log.Println("error processing message:", err)
-			}
+func receiveUpdates(ctx context.Context, updates tgbotapi.UpdatesChannel, msgModel *messages.Model) {
+	for {
+		select {
+		case <-ctx.Done():
+			return
+		case update := <-updates:
+			handleUpdate(ctx, update, msgModel)
+		}
+	}
+}
+
+func handleUpdate(ctx context.Context, update tgbotapi.Update, msgModel *messages.Model) {
+	if update.Message != nil { // If we got a message
+		log.Printf("[%s] %s", update.Message.From.UserName, update.Message.Text)
+
+		err := msgModel.IncomingMessage(ctx, messages.Message{
+			Text:   update.Message.Text,
+			UserID: update.Message.From.ID,
+		})
+		if err != nil {
+			log.Println("error processing message:", err)
 		}
 	}
 }
