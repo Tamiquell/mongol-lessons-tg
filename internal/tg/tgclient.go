@@ -7,6 +7,7 @@ import (
 	vb "github/Tamiquell/mongol-lessons-tg/internal/verbs"
 	"log"
 	"os"
+	"time"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/pkg/errors"
@@ -50,6 +51,7 @@ func (c *Client) ListenUpdates(msgModel *messages.Model) {
 
 	log.Println("listening for messages")
 	go receiveUpdates(ctx, updates, msgModel)
+	time.Sleep(time.Millisecond * 50)
 	bufio.NewReader(os.Stdin).ReadBytes('q')
 	cancel()
 
