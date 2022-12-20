@@ -36,13 +36,14 @@ func (c *Client) SendMessage(text string, userID int64, keyboard tgbotapi.ReplyK
 	return nil
 }
 
-func (c *Client) ListenUpdates(ctx context.Context, msgModel *messages.Model) {
+func (c *Client) ListenUpdates(msgModel *messages.Model) {
 
 	vb.FillVerbs()
 
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
 
+	ctx := context.Background()
 	ctx, cancel := context.WithCancel(ctx)
 
 	updates := c.client.GetUpdatesChan(u)
