@@ -50,7 +50,7 @@ func (c *Client) ListenUpdates(msgModel *messages.Model) {
 
 	log.Println("listening for messages")
 	go receiveUpdates(ctx, updates, msgModel)
-	bufio.NewReader(os.Stdin).ReadBytes('\n')
+	bufio.NewReader(os.Stdin).ReadBytes('q')
 	cancel()
 
 }
