@@ -61,11 +61,11 @@ func receiveUpdates(ctx context.Context, updates tgbotapi.UpdatesChannel, msgMod
 	log.Println("inside receiveUpdates")
 	for {
 		select {
-		case <-ctx.Done():
-			return
 		case update := <-updates:
 			log.Println("inside update := <- updates")
 			handleUpdate(ctx, update, msgModel)
+		case <-ctx.Done():
+			return
 		}
 	}
 }
