@@ -16,7 +16,9 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	tgClient, err := tg.New(os.Getenv("TELEGRAM_APITOKEN"))
+	// tgClient, err := tg.New(os.Getenv("TELEGRAM_APITOKEN"))
+	tgClient, err := tg.New(os.Getenv("TELEGRAM_APITOKEN_DEV"))
+
 	if err != nil {
 		log.Fatal("tg client init failed:", err)
 	}

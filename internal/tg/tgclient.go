@@ -56,6 +56,7 @@ func (c *Client) ListenUpdates(msgModel *messages.Model) {
 }
 
 func receiveUpdates(ctx context.Context, updates tgbotapi.UpdatesChannel, msgModel *messages.Model) {
+	log.Println("inside receiveUpdates")
 	for {
 		select {
 		case <-ctx.Done():
@@ -67,6 +68,7 @@ func receiveUpdates(ctx context.Context, updates tgbotapi.UpdatesChannel, msgMod
 }
 
 func handleUpdate(ctx context.Context, update tgbotapi.Update, msgModel *messages.Model) {
+	log.Println("inside handleUpdate")
 	if update.Message != nil { // If we got a message
 		log.Printf("[%s] %s", update.Message.From.UserName, update.Message.Text)
 

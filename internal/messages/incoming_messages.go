@@ -4,6 +4,7 @@ import (
 	"context"
 	hp "github/Tamiquell/mongol-lessons-tg/internal/helpers"
 	vb "github/Tamiquell/mongol-lessons-tg/internal/verbs"
+	"log"
 	"strings"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
@@ -33,6 +34,7 @@ var answers = make(map[int64]string)
 var currentlyIn string
 
 func (s *Model) IncomingMessage(ctx context.Context, msg Message) error {
+	log.Println("inside IncomingMessage")
 	switch msg.Text {
 	case "/start":
 		currentlyIn = "/start"
