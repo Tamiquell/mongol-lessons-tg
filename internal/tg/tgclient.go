@@ -64,6 +64,7 @@ func receiveUpdates(ctx context.Context, updates tgbotapi.UpdatesChannel, msgMod
 		case <-ctx.Done():
 			return
 		case update := <-updates:
+			log.Println("inside update := <- updates")
 			handleUpdate(ctx, update, msgModel)
 		}
 	}
